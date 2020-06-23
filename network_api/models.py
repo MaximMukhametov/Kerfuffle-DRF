@@ -49,16 +49,16 @@ class Photo(models.Model):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    name = models.CharField(max_length=50, unique=True, verbose_name='Name')
-    unique_url_name = models.CharField(null=True, blank=True, max_length=50,
+    name = models.CharField(max_length=60, unique=True, verbose_name='Name')
+    unique_url_name = models.CharField(null=True, blank=True, max_length=60,
                                        verbose_name='Url name')
-    full_name = models.CharField(null=True, blank=True, max_length=50,
+    full_name = models.CharField(null=True, blank=True, max_length=60,
                                  verbose_name='Full name')
     photos = models.OneToOneField(Photo, null=True, blank=True,
                                   on_delete=models.SET_NULL)
     background_photo = models.ImageField(null=True, blank=True,
                                          verbose_name='background_photo')
-    status = models.CharField(null=True, blank=True, max_length=50,
+    status = models.CharField(null=True, blank=True, max_length=60,
                               verbose_name='Status')
     followed = models.ManyToManyField('self', blank=True, symmetrical=False,
                                       related_name='followers')
