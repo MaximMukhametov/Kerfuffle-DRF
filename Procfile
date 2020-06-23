@@ -1,1 +1,1 @@
-web: gunicorn bboard.wsgi --log-file -
+web: gunicorn social-network.wsgi --log-file -
