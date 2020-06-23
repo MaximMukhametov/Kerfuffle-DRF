@@ -1,7 +1,6 @@
 from collections import OrderedDict
 
 from django.contrib.auth.models import AnonymousUser
-from django.utils import timezone
 from rest_framework import serializers
 
 from network_api.models import User, Photo, Contact, Message, Post
@@ -62,8 +61,9 @@ class UserMetaSerializer(serializers.ModelSerializer):
         else:
             super().__init__(*args, **kwargs)
 
-    def get_posts (self, user):
-        posts = PostSerializer(Post.objects.filter(owner_id=user.id), many=True).data
+    def get_posts(self, user):
+        posts = PostSerializer(Post.objects.filter(owner_id=user.id),
+                               many=True).data
         return posts
 
     def partial_update(self, instance, validated_data):
