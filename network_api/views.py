@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import status
@@ -60,6 +61,8 @@ class UsersTotalAPI(APIView, PageNumberPagination):
 
 
 class UserProfileView(APIView):
+
+    @transaction.atomic
     def get(self, request, *args, **kwargs):
         user = User.objects.get(id=kwargs['pk'] if kwargs else request.user.id)
         serializer = UserMetaSerializer(user,
@@ -172,6 +175,7 @@ class PostView(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    @transaction.atomic
     def get_queryset(self):
         user_id = self.request.user.id
         if 'userid' in self.request.query_params:
