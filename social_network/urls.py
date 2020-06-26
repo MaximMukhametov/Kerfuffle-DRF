@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from network_api.views import UsersAPIView, UsersTotalAPI, UserProfileView, \
+from network_api.views import UsersTotalAPI, UserProfileView, \
     UserStatusView, \
     PhotoUploadView, UserAuthView, MessageView, PostView, FollowUnfollowView, \
     LikeUnlikeView
@@ -14,7 +14,6 @@ router.register('posts', PostView, basename='posts')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('usersupload/', UsersAPIView.as_view(), name='usersupload'),
     path('users/', UsersTotalAPI.as_view(), name='users'),
     path('profile/status/', UserStatusView.as_view(), name='users'),
     path('profile/status/<int:pk>', UserStatusView.as_view(), name='users'),

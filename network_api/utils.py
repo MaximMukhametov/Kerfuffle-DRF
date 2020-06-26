@@ -16,6 +16,12 @@ def get_resize_image(sourse_field: ImageFieldFile,
 
 
 class UserFields:
+    """
+    Dynamically include/exclude fields to Django Rest Framwork serializers
+    based on properties of this class. It's handleing in __init__ method of
+    Serializer class
+    """
+
     user_show_fields = (
         'name', 'id', 'unique_url_name', 'photos', 'status')
     users_upload_field = ('name', 'id', 'unique_url_name', 'photos', 'status')

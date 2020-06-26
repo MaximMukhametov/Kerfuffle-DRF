@@ -52,6 +52,11 @@ class UserMetaSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
     def __init__(self, *args, **kwargs):
+        """
+        Dynamically include/exclude fields to Django Rest Framwork serializers
+        based on properties of this class.
+        """
+
         if 'field_set' in kwargs:
             included = set(kwargs.pop('field_set'))
             super().__init__(*args, **kwargs)
@@ -61,12 +66,14 @@ class UserMetaSerializer(serializers.ModelSerializer):
         else:
             super().__init__(*args, **kwargs)
 
-    def get_posts(self, user):
+    @staticmethod
+    def get_posts(user):
         posts = PostSerializer(Post.objects.filter(owner_id=user.id),
                                many=True).data
         return posts
 
-    def partial_update(self, instance, validated_data):
+    @staticmethod
+    def partial_update(instance, validated_data):
         is_contacts = False
         if 'contacts' in validated_data.keys():
             is_contacts = True

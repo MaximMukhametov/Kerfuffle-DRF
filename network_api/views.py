@@ -1,9 +1,6 @@
-from django.db import transaction
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from rest_framework import status
 from rest_framework.decorators import permission_classes
-from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404
+from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -17,30 +14,6 @@ from network_api.serializers import PhotosUploadSerializer, \
 from network_api.utils import UserFields
 
 
-# users upload
-class UsersAPIView(APIView):
-    def post(self, request):
-        User.objects.all().delete()
-        serializer = UserMetaSerializer(data=request.data, many=True,
-                                        field_set=UserFields.users_upload_field)
-        for i in serializer.initial_data:
-            photo = Photo.objects.create(small=i['photos']['small'],
-                                         large=i['photos']['large'])
-            create_user = User.objects.create(
-                name=i['name'],
-                full_name=i['name'],
-                id=i['id'],
-                unique_url_name=i['unique_url_name'],
-                photos=photo,
-                status=i['status'])
-            photo.save()
-            create_user.save()
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# user list show
 class UsersTotalAPI(APIView, PageNumberPagination):
     permission_classes = [IsAuthenticated]
     page_query_param = 'page'
@@ -62,7 +35,6 @@ class UsersTotalAPI(APIView, PageNumberPagination):
 
 class UserProfileView(APIView):
 
-    @transaction.atomic
     def get(self, request, *args, **kwargs):
         user = User.objects.get(id=kwargs['pk'] if kwargs else request.user.id)
         serializer = UserMetaSerializer(user,
@@ -175,7 +147,6 @@ class PostView(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-    @transaction.atomic
     def get_queryset(self):
         user_id = self.request.user.id
         if 'userid' in self.request.query_params:
