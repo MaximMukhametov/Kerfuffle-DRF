@@ -8,6 +8,7 @@ from .managers import CustomUserManager, CustomMessageManager
 
 
 class Message(models.Model):
+    """User messages"""
     message = models.CharField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True,
                                       verbose_name='Created time', )
@@ -29,6 +30,7 @@ class Message(models.Model):
 
 
 class Contact(models.Model):
+    """User contact information"""
     github = models.CharField(null=True, blank=True, max_length=100)
     vk = models.CharField(null=True, blank=True, max_length=100)
     facebook = models.CharField(null=True, blank=True, max_length=100)
@@ -40,6 +42,7 @@ class Contact(models.Model):
 
 
 class Photo(models.Model):
+    """User photo"""
     small = models.TextField(null=True, blank=True, verbose_name='Small')
     small_img = models.ImageField(null=True, blank=True,
                                   verbose_name='Small img')
@@ -80,13 +83,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @staticmethod
     @receiver(post_save, sender='network_api.User')
-    def create_contacts_for_new_user(sender, created, instance, **kwargs):
+    def create_contacts_for_new_user(sender, created, instance):
+        """Creating a contact entity when creating a user"""
         if created:
             instance.contacts = Contact.objects.create()
             instance.save()
 
 
 class Post(models.Model):
+    """User posts"""
     text = models.TextField()
     owner = models.ForeignKey(User, null=True, blank=True,
                               on_delete=models.CASCADE,
@@ -102,5 +107,6 @@ class Post(models.Model):
 
     @property
     def likes_count(self):
+        """Number of likes for this post"""
         likes = self.like.count()
         return likes

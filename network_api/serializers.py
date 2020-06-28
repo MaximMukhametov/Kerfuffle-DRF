@@ -19,8 +19,9 @@ class PhotosUploadSerializer(serializers.ModelSerializer):
         model = Photo
         fields = ('large_img',)
 
-    def validate_large_img(self, data):
-        return validate_image(self, data)
+    @staticmethod
+    def validate_large_img(data):
+        return validate_image(data)
 
     def create(self, validated_data):
         user = validated_data['user']
@@ -91,8 +92,9 @@ class UserMetaSerializer(serializers.ModelSerializer):
             validated_data['contacts'] = contacts_validated_data
         return instance
 
-    def validate_background_photo(self, data):
-        return validate_image(self, data)
+    @staticmethod
+    def validate_background_photo(data):
+        return validate_image(data)
 
     def to_representation(self, instance):
         representation = instance
@@ -103,7 +105,7 @@ class UserMetaSerializer(serializers.ModelSerializer):
         if 'user' in self.context:
             if not isinstance(self.context[
                                   'user'],
-                              AnonymousUser):  # пересмотреть, мб убрать
+                              AnonymousUser):
                 is_followed = self.context['user'].followed.filter(
                     id=instance.id).exists()
                 representation['followed'] = True if is_followed else False

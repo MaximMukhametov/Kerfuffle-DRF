@@ -1,7 +1,8 @@
 from rest_framework.exceptions import ValidationError
 
 
-def validate_image(self, data):
+def validate_image(data):
+    """Image size check"""
     max_img_size = (2000, 2000)
     if data.image.size > max_img_size:
         raise ValidationError(

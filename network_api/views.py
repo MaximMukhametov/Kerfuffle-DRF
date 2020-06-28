@@ -35,7 +35,7 @@ class UsersTotalAPI(APIView, PageNumberPagination):
 
 class UserProfileView(APIView):
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, **kwargs):
         user = User.objects.get(id=kwargs['pk'] if kwargs else request.user.id)
         serializer = UserMetaSerializer(user,
                                         field_set=UserFields.profile_contacts_get_fields)
@@ -55,14 +55,14 @@ class UserProfileView(APIView):
 class UserStatusView(APIView):
     serializer_class = UserMetaSerializer
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, **kwargs):
         user = User.objects.get(id=kwargs['pk'] if kwargs else request.user.id)
         serializer = self.serializer_class(user,
                                            field_set=UserFields.status_fields)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @permission_classes(IsAuthenticated)
-    def put(self, request, *args, **kwargs):
+    def put(self, request):
         serializer = self.serializer_class(data=request.data,
                                            field_set=UserFields.status_fields)
         if serializer.is_valid():
@@ -75,12 +75,12 @@ class UserStatusView(APIView):
 class PhotoUploadView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         user = Photo.objects.get(id=request.user.id)
         serializer = PhotosSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, *args, **kwargs):
+    def put(self, request):
 
         photo_serializer = PhotosUploadSerializer(data=request.data)
 
@@ -97,7 +97,7 @@ class PhotoUploadView(APIView):
 class UserAuthView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         serializer = UserMetaSerializer(request.user,
                                         field_set=UserFields.user_auth_fields)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -107,7 +107,7 @@ class MessageView(APIView):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, **kwargs):
         if 'get_users' in request.query_params:
             correspondence = Message.objects.get_users(request,
                                                        self.serializer_class)
@@ -117,7 +117,7 @@ class MessageView(APIView):
         serializer = self.serializer_class(message, many=True)
         return Response({'count': count, 'data': serializer.data})
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, **kwargs):
         addressee = get_object_or_404(User, id=kwargs['pk'])
         new_message = Message.objects.create(addressee, request)
         serializer = self.serializer_class(new_message)
@@ -132,7 +132,7 @@ class MessageView(APIView):
         mutable_message.save(update_fields=['message'])
         return Response(serializer.data)
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request, **kwargs):
         message_to_be_deleted = get_object_or_404(request.user.my_messages,
                                                   id=kwargs['pk'])
         result, _ = message_to_be_deleted.delete()
@@ -158,16 +158,16 @@ class PostView(ModelViewSet):
 class FollowUnfollowView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, **kwargs):
         if request.user.followed.filter(id=kwargs['pk']).exists():
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, **kwargs):
         return User.objects.follow_unfollow(user=request.user, action='add',
                                             followed_user_id=kwargs['pk'])
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request, **kwargs):
         return User.objects.follow_unfollow(user=request.user, action='remove',
                                             followed_user_id=kwargs['pk'])
 
@@ -175,7 +175,7 @@ class FollowUnfollowView(APIView):
 class LikeUnlikeView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, **kwargs):
         post = get_object_or_404(Post, id=kwargs['pk'])
         is_already_like = request.user.my_likes.filter(id=post.id).exists()
         if is_already_like:
