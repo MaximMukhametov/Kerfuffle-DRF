@@ -83,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @staticmethod
     @receiver(post_save, sender='network_api.User')
-    def create_contacts_for_new_user(sender, created, instance):
+    def create_contacts_for_new_user(sender, created, instance, **kwargs):
         """Creating a contact entity when creating a user"""
         if created:
             instance.contacts = Contact.objects.create()
