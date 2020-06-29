@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY',
 # DEBUG = True
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['http://social-network-spa.herokuapp.com']
+ALLOWED_HOSTS = ['kerfuffle.fun']
 
 # Application definition
 
