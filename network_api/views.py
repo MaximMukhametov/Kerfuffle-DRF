@@ -76,8 +76,8 @@ class PhotoUploadView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = Photo.objects.get(id=request.user.id)
-        serializer = PhotosSerializer(user)
+        photo = Photo.objects.get(user=request.user.id)
+        serializer = PhotosSerializer(photo)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):

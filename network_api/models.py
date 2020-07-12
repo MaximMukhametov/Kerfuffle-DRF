@@ -14,12 +14,13 @@ class Message(models.Model):
                                       verbose_name='Created time', )
     written_by = models.ForeignKey('User', null=True, blank=True,
                                    on_delete=models.CASCADE,
-                                   verbose_name='Written by',
+                                   verbose_name='User who wrote this post',
                                    related_name='my_messages',
                                    related_query_name='my_message')
     written_for = models.ForeignKey('User', null=True, blank=True,
                                     on_delete=models.CASCADE,
-                                    verbose_name='Written for',
+                                    verbose_name='Recipient user of'
+                                                 ' this message',
                                     related_name='messages_for_me',
                                     related_query_name='message_for_me')
 
@@ -43,10 +44,17 @@ class Contact(models.Model):
 
 class Photo(models.Model):
     """User photo"""
-    small = models.TextField(null=True, blank=True, verbose_name='Small')
+    small = models.TextField(null=True, blank=True,
+                             verbose_name='Small',
+                             help_text='This field with a link to '
+                                       'the small size photo for users '
+                                       'downloaded from a third-party API')
     small_img = models.ImageField(null=True, blank=True,
                                   verbose_name='Small img')
-    large = models.TextField(null=True, blank=True, verbose_name='Large')
+    large = models.TextField(null=True, blank=True, verbose_name='Large',
+                             help_text='This field with a link to '
+                                       'the large size photo for users '
+                                       'downloaded from a third-party API')
     large_img = models.ImageField(null=True, blank=True,
                                   verbose_name='Large img')
 
@@ -60,13 +68,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     photos = models.OneToOneField(Photo, null=True, blank=True,
                                   on_delete=models.SET_NULL)
     background_photo = models.ImageField(null=True, blank=True,
-                                         verbose_name='background_photo')
+                                         verbose_name='Background photo')
     status = models.CharField(null=True, blank=True, max_length=60,
                               verbose_name='Status')
     followed = models.ManyToManyField('self', blank=True, symmetrical=False,
+                                      verbose_name='Users to follow',
                                       related_name='followers')
     is_staff = models.BooleanField(default=False)
     contacts = models.OneToOneField(Contact, null=True, blank=True,
+                                    verbose_name='Social network links',
                                     on_delete=models.SET_NULL)
     looking_for_a_job = models.BooleanField(null=True, blank=True,
                                             verbose_name='Looking for a job')
@@ -94,11 +104,12 @@ class Post(models.Model):
     """User posts"""
     text = models.TextField()
     owner = models.ForeignKey(User, null=True, blank=True,
+                              verbose_name='Post owner',
                               on_delete=models.CASCADE,
                               related_name='my_posts')
     created_at = models.DateTimeField(auto_now_add=True,
                                       verbose_name='Created time')
-    like = models.ManyToManyField(User, verbose_name='Like',
+    like = models.ManyToManyField(User, verbose_name='Users who like the post',
                                   related_name='my_likes',
                                   related_query_name='my_like')
 

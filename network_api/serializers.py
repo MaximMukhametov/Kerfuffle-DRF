@@ -24,6 +24,9 @@ class PhotosUploadSerializer(serializers.ModelSerializer):
         return validate_image(data)
 
     def create(self, validated_data):
+        """
+        Update or create photo instance, and associates with particular user
+        """
         user = validated_data['user']
         validated_data['large_img'].name = f'{user.id}{user.name}.jpg'
         photo_obj, is_create = Photo.objects.update_or_create(
@@ -69,12 +72,14 @@ class UserMetaSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_posts(user):
+        """Get all posts of particular user """
         posts = PostSerializer(Post.objects.filter(owner_id=user.id),
                                many=True).data
         return posts
 
     @staticmethod
     def partial_update(instance, validated_data):
+        """Updates user information"""
         is_contacts = False
         if 'contacts' in validated_data.keys():
             is_contacts = True
