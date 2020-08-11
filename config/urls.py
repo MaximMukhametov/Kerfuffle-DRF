@@ -8,7 +8,8 @@ from apps.photos.api.views import PhotoUploadView
 from apps.posts.api.views import PostView, LikeUnlikeView
 from apps.users.api.views import UsersTotalAPI, UserStatusView, UserProfileView, \
     UserAuthView, FollowUnfollowView
-from .settings import DEBUG
+from .settings.settings import DEBUG
+from config.settings.common.swagger import urlpatterns as docs_api_urls
 
 router = DefaultRouter()
 router.register('posts', PostView, basename='posts')
@@ -29,6 +30,9 @@ urlpatterns = [
     path('like/<int:pk>', LikeUnlikeView.as_view(), name='like'),
 
 ]
+
+# swagger urls
+urlpatterns += docs_api_urls
 
 if DEBUG:
     urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]
