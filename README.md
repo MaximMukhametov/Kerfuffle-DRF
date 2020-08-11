@@ -6,4 +6,4 @@ DB: PostgreSQL + Amazon Simple Storage Service (Amazon S3)
 
 #### Frontend written by React + Redux: [Link my React repositorie](https://github.com/MaximMukhametov/social-network "Kerfuffle SPA")
 
-###Link https://kerfuffle.fun
+### Link https://kerfuffle.fun
