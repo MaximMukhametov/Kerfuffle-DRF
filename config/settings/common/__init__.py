@@ -11,7 +11,6 @@ from .path import *
 from .security import *
 from .static import *
 from .storage import *
-from .swagger import *
 from .templates import *
 
 

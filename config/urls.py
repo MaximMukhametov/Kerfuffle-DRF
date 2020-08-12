@@ -8,8 +8,8 @@ from apps.photos.api.views import PhotoUploadView
 from apps.posts.api.views import PostView, LikeUnlikeView
 from apps.users.api.views import UsersTotalAPI, UserStatusView, UserProfileView, \
     UserAuthView, FollowUnfollowView
-from .settings.settings import DEBUG
-from config.settings.common.swagger import urlpatterns as docs_api_urls
+from .settings.development import DEBUG
+from config.swagger import urlpatterns as docs_api_urls
 
 router = DefaultRouter()
 router.register('posts', PostView, basename='posts')
