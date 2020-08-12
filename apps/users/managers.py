@@ -46,19 +46,7 @@ class CustomUserManager(UserManager):
         followers = request.query_params.get('followers')
         post_id = request.query_params.get('like_post')
 
-        if following:
-            if following == 'true':
-                users = user.followed.all()
-            elif following == 'false':
-                users = self.model.objects.exclude(
-                    id__in=user.followed.all())
-
-        if followers:
-            if followers == 'true':
-                users = user.followers.all()
-            elif followers == 'false':
-                users = self.model.objects.exclude(
-                    id__in=user.followers.all())
+        users = self._followers(following, followers, user, users)
 
         if name:
             users = users.filter(name=name)
@@ -86,3 +74,19 @@ class CustomUserManager(UserManager):
         except self.model.DoesNotExist:
             return Response(f'User number {followed_user_id} not found ',
                             status=status.HTTP_404_NOT_FOUND)
+
+    def _followers(self, following, followers, user, users):
+        if following:
+            if following == 'true':
+                users = user.followed.all()
+            elif following == 'false':
+                users = self.model.objects.exclude(
+                    id__in=user.followed.all())
+
+        if followers:
+            if followers == 'true':
+                users = user.followers.all()
+            elif followers == 'false':
+                users = self.model.objects.exclude(
+                    id__in=user.followers.all())
+        return users

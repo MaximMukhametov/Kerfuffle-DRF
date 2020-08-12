@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import permission_classes
 from rest_framework.pagination import PageNumberPagination
@@ -7,8 +9,12 @@ from rest_framework.views import APIView
 
 from apps.posts.models.post import Post
 from apps.users.api.serializers import UserMetaSerializer
+from apps.users.api.swagger_query_string_desc.users_total_api import user_param, \
+    name_param, following_param, followers_param, post_id_param
 from apps.users.models import User
 from apps.users.utils import UserFields
+
+user_response = openapi.Response('UserApi response', UserMetaSerializer)
 
 
 class UsersTotalAPI(APIView, PageNumberPagination):
@@ -17,6 +23,10 @@ class UsersTotalAPI(APIView, PageNumberPagination):
     page_size_query_param = 'count'
     max_page_size = 100
 
+    @swagger_auto_schema(
+        manual_parameters=[user_param, name_param, following_param,
+                           followers_param, post_id_param],
+        responses={200: user_response})
     def get(self, request):
         users, users_count, error = User.objects.get_users(self, request,
                                                            post_model=Post)
