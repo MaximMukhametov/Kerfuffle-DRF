@@ -7,7 +7,7 @@ class CustomMessageManager(models.Manager):
     def get_users(self, request, serializer_class):
         """
         Gives a list of users who have correspondence
-        with a particular user with the last message
+        with a particular user with the last message.
         """
         filter = Q(message_for_me__written_by_id=request.user.id) | Q(
             my_message__written_for_id=request.user.id)
@@ -27,7 +27,7 @@ class CustomMessageManager(models.Manager):
         """
         Gives a list of dialogs between current user
         and user which selected by id, with the ability to
-        limit the quantity of dialogs by 'count'
+        limit the quantity of dialogs by 'count'.
         """
         if 'count' in request.query_params:
             count = int(request.query_params['count'])
@@ -44,7 +44,7 @@ class CustomMessageManager(models.Manager):
     def create(self, addressee, request):
         """
         Create new message and tie it between current user(request.user)
-        and user which selected by id(addressee)
+        and user which selected by id(addressee).
         """
         new_message = self.model(written_for=addressee,
                                  written_by=request.user,

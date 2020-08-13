@@ -8,17 +8,17 @@ from apps.photos.models.photo import Photo
 
 
 class PhotoUploadView(APIView):
-    """Provides access to a photo object or create/update instance"""
+    """Provides access to a photo object or create/update instance."""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        """Returns a photo of a current user"""
+        """Returns a photo of a current user."""
         photo = Photo.objects.get(user=request.user.id)
         serializer = PhotosSerializer(photo)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):
-        """Update or create photo instance"""
+        """Update or create photo instance."""
         photo_serializer = PhotosUploadSerializer(data=request.data)
 
         if photo_serializer.is_valid():

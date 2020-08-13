@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Post(models.Model):
-    """User posts"""
+    """User posts."""
     text = models.TextField()
     owner = models.ForeignKey('users.User', null=True, blank=True,
                               verbose_name='Post owner',
@@ -19,7 +19,7 @@ class Post(models.Model):
 
     @property
     def likes_count(self):
-        """Number of likes for this post"""
+        """Number of likes for this post."""
         likes = self.like.count()
         return likes
 

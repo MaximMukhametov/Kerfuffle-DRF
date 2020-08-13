@@ -10,18 +10,18 @@ from apps.posts.permissions import PostChangePermission
 
 
 class PostView(ModelViewSet):
-    """ Provide CRUD workflow with Post model """
+    """ Provide CRUD workflow with Post model."""
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated, PostChangePermission]
 
     def perform_create(self, serializer):
-        """ Add owner of post """
+        """ Add owner of post."""
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
         """
         Returns all posts of the user who made the request,
-        or posts of the user with the specified number
+        or posts of the user with the specified number.
         """
         user_id = self.request.user.id
         if 'userid' in self.request.query_params:
@@ -31,13 +31,13 @@ class PostView(ModelViewSet):
 
 
 class LikeUnlikeView(APIView):
-    """ Provides like / unlike functionality for post instance """
+    """ Provides like / unlike functionality for post instance."""
     permission_classes = [IsAuthenticated]
 
     def put(self, request, **kwargs):
         """
         Puts 'Like' from the current user or
-        remove 'Like' if it is already set
+        remove 'Like' if it is already set.
         """
         post = get_object_or_404(Post, id=kwargs['pk'])
         is_already_like = request.user.my_likes.filter(id=post.id).exists()

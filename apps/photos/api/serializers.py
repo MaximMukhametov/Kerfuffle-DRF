@@ -19,12 +19,12 @@ class PhotosUploadSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def validate_large_img(data):
-        """Checks if the image size is exceeded"""
+        """Checks if the image size is exceeded."""
         return validate_image(data)
 
     def create(self, validated_data):
         """
-        Update or create photo instance, and associates with particular user
+        Update or create photo instance, and associates with particular user.
         """
         user = validated_data['user']
         validated_data['large_img'].name = f'{user.id}{user.name}.jpg'

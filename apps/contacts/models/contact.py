@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Contact(models.Model):
-    """User contact information"""
+    """User contact information."""
     github = models.CharField(null=True, blank=True, max_length=100)
     vk = models.CharField(null=True, blank=True, max_length=100)
     facebook = models.CharField(null=True, blank=True, max_length=100)

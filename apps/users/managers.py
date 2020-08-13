@@ -1,4 +1,5 @@
 from django.contrib.auth.models import UserManager
+from django.db.models import Count
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -65,7 +66,7 @@ class CustomUserManager(UserManager):
 
     def follow_unfollow(self, user, action, followed_user_id):
         """
-        Accepts action(add or remove) and edit list of user friends
+        Accepts action(add or remove) and edit list of user friends.
         """
         try:
             followed_user = self.model.objects.get(id=followed_user_id)

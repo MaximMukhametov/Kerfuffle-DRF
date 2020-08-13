@@ -20,7 +20,7 @@ def get_resize_image(source_field: ImageFieldFile,
     small_photo.thumbnail((300, 300))
 
     # A stream implementation using an in-memory bytes buffer,
-    # this is necessary to save the thumbnail in memory
+    # this is necessary to save the thumbnail in memory.
     thumb_io = BytesIO()
     small_photo.save(thumb_io, small_photo.format, quality=60)
     target_field.save(f'small{source_field.file.name}',

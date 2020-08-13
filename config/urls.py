@@ -13,10 +13,11 @@ from config.swagger import urlpatterns as docs_api_urls
 
 router = DefaultRouter()
 router.register('posts', PostView, basename='posts')
+router.register('users', UsersTotalAPI, basename='users')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', UsersTotalAPI.as_view(), name='users'),
+    # path('users/', UsersTotalAPI.as_view(), name='users'),
     path('profile/status/', UserStatusView.as_view(), name='users'),
     path('profile/status/<int:pk>', UserStatusView.as_view(), name='users'),
     path('profile/', UserProfileView.as_view(), name='profile'),

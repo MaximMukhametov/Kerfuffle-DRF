@@ -4,7 +4,7 @@ from apps.dialogs.managers import CustomMessageManager
 
 
 class Message(models.Model):
-    """User dialogs"""
+    """User dialogs."""
     message = models.CharField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True,
                                       verbose_name='Created time', )

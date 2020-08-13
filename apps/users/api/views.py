@@ -1,43 +1,30 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import permission_classes
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from apps.posts.models.post import Post
+import apps.users.api.serializer_fields_set as user_fields
 from apps.users.api.serializers import UserMetaSerializer
-from apps.users.api.swagger_query_string_desc.users_total_api import user_param, \
-    name_param, following_param, followers_param, post_id_param
+from apps.users.filters import UserFilter
 from apps.users.models import User
-from apps.users.utils import UserFields
 
 user_response = openapi.Response('UserApi response', UserMetaSerializer)
 
 
-class UsersTotalAPI(APIView, PageNumberPagination):
+class UsersTotalAPI(ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserMetaSerializer
     permission_classes = [IsAuthenticated]
-    page_query_param = 'page'
-    page_size_query_param = 'count'
-    max_page_size = 100
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = UserFilter
 
-    @swagger_auto_schema(
-        manual_parameters=[user_param, name_param, following_param,
-                           followers_param, post_id_param],
-        responses={200: user_response})
-    def get(self, request):
-        users, users_count, error = User.objects.get_users(self, request,
-                                                           post_model=Post)
-
-        user_serializer = UserMetaSerializer(users,
-                                             context={'user': request.user},
-                                             many=True,
-                                             field_set=UserFields.user_show_fields)
-
-        return Response({"items": user_serializer.data,
-                         "totalCount": users_count, "error": error})
+    def get_serializer(self, *args, **kwargs):
+        return super().get_serializer(field_set=user_fields.user_show_fields,
+                                      *args, **kwargs)
 
 
 class UserProfileView(APIView):
@@ -45,7 +32,7 @@ class UserProfileView(APIView):
     def get(self, request, **kwargs):
         user = User.objects.get(id=kwargs['pk'] if kwargs else request.user.id)
         serializer = UserMetaSerializer(user,
-                                        field_set=UserFields.profile_contacts_get_fields)
+                                        field_set=user_fields.profile_contacts_get_fields)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @permission_classes(IsAuthenticated)
@@ -53,7 +40,7 @@ class UserProfileView(APIView):
         serializer = UserMetaSerializer(data=request.data, partial=True,
                                         context={
                                             'user_to_get_background_photo_link': request.user},
-                                        field_set=UserFields.profile_contacts_put_fields)
+                                        field_set=user_fields.profile_contacts_put_fields)
         serializer.is_valid(raise_exception=True)
         serializer.partial_update(request.user, serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -65,13 +52,13 @@ class UserStatusView(APIView):
     def get(self, request, **kwargs):
         user = User.objects.get(id=kwargs['pk'] if kwargs else request.user.id)
         serializer = self.serializer_class(user,
-                                           field_set=UserFields.status_fields)
+                                           field_set=user_fields.status_fields)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @permission_classes(IsAuthenticated)
     def put(self, request):
         serializer = self.serializer_class(data=request.data,
-                                           field_set=UserFields.status_fields)
+                                           field_set=user_fields.status_fields)
         if serializer.is_valid():
             request.user.status = serializer.data['status']
             request.user.save()
@@ -84,7 +71,7 @@ class UserAuthView(APIView):
 
     def get(self, request):
         serializer = UserMetaSerializer(request.user,
-                                        field_set=UserFields.user_auth_fields)
+                                        field_set=user_fields.user_auth_fields)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
