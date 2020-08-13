@@ -17,7 +17,7 @@ class UserMetaSerializer(serializers.ModelSerializer):
      """
 
     contacts = ContactsSerializer(required=False, many=True)
-    photos = PhotosSerializer(many=True)
+    photos = PhotosSerializer(required=False, many=True)
     posts = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
     followed = serializers.SerializerMethodField()
@@ -29,6 +29,10 @@ class UserMetaSerializer(serializers.ModelSerializer):
                   'full_name', 'posts', 'photos', 'background_photo',
                   'status', 'followed', 'followers', 'looking_for_a_job',
                   'looking_for_a_job_description', 'contacts', 'following')
+        read_only_fields = (
+            'id',
+            'name',
+        )
 
     def __init__(self, *args, **kwargs):
         """

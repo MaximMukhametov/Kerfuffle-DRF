@@ -11,4 +11,3 @@ MIDDLEWARE += (
 INSTALLED_APPS += (
     'silk',
 )
-

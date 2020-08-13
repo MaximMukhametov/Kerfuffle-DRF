@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from rest_framework.exceptions import ValidationError
 
 from apps.users.managers import CustomUserManager
 
@@ -36,3 +37,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         ordering = ['-id']
+
+    def follow_unfollow(self, action, followed_user_id):
+        """
+        Accepts action(add or remove) and edit list of user friends.
+        """
+
+        if self.followed.filter(id=followed_user_id).exists():
+            followed_user = self.__class__.objects.get(id=followed_user_id)
+            getattr(self.followed, action)(followed_user)
+            return
+        raise ValidationError(f'User number {followed_user_id} not found ')

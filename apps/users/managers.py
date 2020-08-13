@@ -1,6 +1,4 @@
 from django.contrib.auth.models import UserManager
-from rest_framework import status
-from rest_framework.response import Response
 
 
 class CustomUserManager(UserManager):
@@ -31,31 +29,3 @@ class CustomUserManager(UserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(name, password, **extra_fields)
-
-    def follow_unfollow(self, user, action, followed_user_id):
-        """
-        Accepts action(add or remove) and edit list of user friends.
-        """
-        try:
-            followed_user = self.model.objects.get(id=followed_user_id)
-            getattr(user.followed, action)(followed_user)
-            return Response(status=status.HTTP_200_OK)
-        except self.model.DoesNotExist:
-            return Response(f'User number {followed_user_id} not found ',
-                            status=status.HTTP_404_NOT_FOUND)
-
-    def _followers(self, following, followers, user, users):
-        if following:
-            if following == 'true':
-                users = user.followed.all()
-            elif following == 'false':
-                users = self.model.objects.exclude(
-                    id__in=user.followed.all())
-
-        if followers:
-            if followers == 'true':
-                users = user.followers.all()
-            elif followers == 'false':
-                users = self.model.objects.exclude(
-                    id__in=user.followers.all())
-        return users
