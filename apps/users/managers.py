@@ -1,5 +1,4 @@
 from django.contrib.auth.models import UserManager
-from django.db.models import Count
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -32,37 +31,6 @@ class CustomUserManager(UserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(name, password, **extra_fields)
-
-    def get_users(self, view, request, post_model):
-        """
-        Get users with paginate, search by name or by friends.
-        """
-        error = None
-        user = self.model.objects.get(
-            id=request.query_params.get('user')) if request.query_params.get(
-            'user') else request.user
-        users = self.model.objects.exclude(id=request.user.id)
-        name = request.query_params.get('name')
-        following = request.query_params.get('following')
-        followers = request.query_params.get('followers')
-        post_id = request.query_params.get('like_post')
-
-        users = self._followers(following, followers, user, users)
-
-        if name:
-            users = users.filter(name=name)
-
-        if post_id:
-            post = post_model.objects.get(id=post_id)
-            users = post.like.all()
-        try:
-            items = view.paginate_queryset(users, view.request,
-                                           view=view)
-
-        except Exception as errors:
-            items = None
-            error = errors
-        return items if items else users, users.count(), error
 
     def follow_unfollow(self, user, action, followed_user_id):
         """

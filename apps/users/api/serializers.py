@@ -45,7 +45,6 @@ class UserMetaSerializer(serializers.ModelSerializer):
         else:
             super().__init__(*args, **kwargs)
 
-
     @staticmethod
     def partial_update(instance, validated_data):
         """Updates user information."""
