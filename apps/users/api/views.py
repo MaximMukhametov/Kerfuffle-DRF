@@ -1,5 +1,4 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg import openapi
 from rest_framework import status
 from rest_framework.mixins import UpdateModelMixin, \
     RetrieveModelMixin
@@ -8,10 +7,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
-import apps.users.api.serializer_fields_set as user_fields
 from apps.users.api.permissions import CurrentUserIsOwner, \
     CurrentUserIsOwnerAuth
-from apps.users.api.serializers import UserMetaSerializer
+from apps.users.api.serializers import UserTotalSerializer, \
+    UserProfileSerializer, UserAuthSerializer
 from apps.users.filters import UserFilter
 from apps.users.models import User
 
@@ -19,8 +18,7 @@ from apps.users.models import User
 class BaseUserViewSet(GenericViewSet):
     """Base generic view set for User model."""
     queryset = User.objects.all()
-    serializer_class = UserMetaSerializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = UserTotalSerializer
 
 
 class UsersTotalAPI(ReadOnlyModelViewSet, BaseUserViewSet):
@@ -30,11 +28,6 @@ class UsersTotalAPI(ReadOnlyModelViewSet, BaseUserViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = UserFilter
 
-    def get_serializer(self, *args, **kwargs):
-        """Set the required fields for the UserMetaSerializer."""
-        return super().get_serializer(field_set=user_fields.user_show_fields,
-                                      *args, **kwargs)
-
 
 class UserProfileView(UpdateModelMixin,
                       RetrieveModelMixin,
@@ -43,24 +36,16 @@ class UserProfileView(UpdateModelMixin,
     User view for displaying a profile of particular
     user with detailed information about him.
     """
+    serializer_class = UserProfileSerializer
     permission_classes = (CurrentUserIsOwner,)
-
-    def get_serializer(self, *args, **kwargs):
-        """Set the required fields for the UserMetaSerializer."""
-        return super().get_serializer(field_set=user_fields.profile_fields,
-                                      *args, **kwargs)
 
 
 class UserAuthView(RetrieveModelMixin, BaseUserViewSet):
     """
     Simple view for auth check.
     """
+    serializer_class = UserAuthSerializer
     permission_classes = (CurrentUserIsOwnerAuth,)
-
-    def get_serializer(self, *args, **kwargs):
-        """Set the required fields for the UserMetaSerializer."""
-        return super().get_serializer(field_set=user_fields.user_auth_fields,
-                                      *args, **kwargs)
 
 
 class FollowUnfollowView(APIView):

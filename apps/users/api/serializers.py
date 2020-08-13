@@ -12,42 +12,15 @@ from apps.users.models import User
 
 class UserMetaSerializer(serializers.ModelSerializer):
     """
-    Instead of creating many serializers, a single meta serializer
-    was created, with dynamically changing fields.
-     """
-
-    contacts = ContactsSerializer(required=False, many=True)
+    Base User serializer contains common fields and methods.
+    """
     photos = PhotosSerializer(required=False, many=True)
-    posts = serializers.SerializerMethodField()
-    followers = serializers.SerializerMethodField()
-    followed = serializers.SerializerMethodField()
-    following = serializers.SerializerMethodField()
+    name = serializers.CharField(read_only=True)
+    id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'unique_url_name',
-                  'full_name', 'posts', 'photos', 'background_photo',
-                  'status', 'followed', 'followers', 'looking_for_a_job',
-                  'looking_for_a_job_description', 'contacts', 'following')
-        read_only_fields = (
-            'id',
-            'name',
-        )
-
-    def __init__(self, *args, **kwargs):
-        """
-        Dynamically include/exclude fields to Django Rest Framework
-        serializers based on properties of this class.
-        """
-
-        if 'field_set' in kwargs:
-            included = set(kwargs.pop('field_set'))
-            super().__init__(*args, **kwargs)
-            existing = set(self.fields.keys())
-            for other in existing - included:
-                self.fields.pop(other)
-        else:
-            super().__init__(*args, **kwargs)
+        fields = ('id', 'name', 'photos')
 
     @staticmethod
     def partial_update(instance, validated_data):
@@ -98,3 +71,51 @@ class UserMetaSerializer(serializers.ModelSerializer):
             is_followed = user.followed.filter(
                 id=obj.id).exists()
         return bool(is_followed)
+
+
+class UserAuthSerializer(UserMetaSerializer):
+    """Serializer for for auth check"""
+
+    class Meta:
+        model = User
+        fields = (
+                UserMetaSerializer.Meta.fields + ('background_photo',)
+        )
+
+
+class UserProfileSerializer(UserAuthSerializer):
+    """
+    Serializer for displaying a profile of particular
+    user with detailed information about him.
+    """
+    contacts = ContactsSerializer(required=False)
+    followed = serializers.SerializerMethodField()
+    followers = serializers.SerializerMethodField()
+    posts = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+                UserAuthSerializer.Meta.fields + (
+            'contacts', 'looking_for_a_job',
+            'looking_for_a_job_description',
+            'full_name',
+            'posts',
+            'followed', 'followers')
+        )
+
+
+class UserTotalSerializer(UserAuthSerializer):
+    """
+    Serializer for displaying a list of users.
+    """
+    following = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+                UserMetaSerializer.Meta.fields + (
+            'unique_url_name',
+            'photos', 'status',
+            'following')
+        )
