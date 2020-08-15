@@ -1,7 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.mixins import UpdateModelMixin, \
-    RetrieveModelMixin
+    RetrieveModelMixin, CreateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,18 +23,20 @@ class BaseUserViewSet(GenericViewSet):
 
 class UsersTotalAPI(ReadOnlyModelViewSet, BaseUserViewSet):
     """
-    User view for displaying a list of users and flexible filtering by them.
+    User view for displaying a list of users
+    and flexible filtering by them.
     """
     filter_backends = (DjangoFilterBackend,)
     filterset_class = UserFilter
 
 
-class UserProfileView(UpdateModelMixin,
+class UserProfileView(CreateModelMixin,
+                      UpdateModelMixin,
                       RetrieveModelMixin,
                       BaseUserViewSet):
     """
-    User view for displaying a profile of particular
-    user with detailed information about him.
+    User view for create and displaying a profile of
+    particular user with detailed information about him.
     """
     serializer_class = UserProfileSerializer
     permission_classes = (CurrentUserIsOwner,)
@@ -49,7 +51,10 @@ class UserAuthView(RetrieveModelMixin, BaseUserViewSet):
 
 
 class FollowUnfollowView(APIView):
-    """Allows you to add or remove a specific user from your followers list."""
+    """
+    Allows you to add or remove a specific
+    user from your followers list.
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request, **kwargs):

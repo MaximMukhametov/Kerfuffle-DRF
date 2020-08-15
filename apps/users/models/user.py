@@ -6,6 +6,11 @@ from rest_framework.exceptions import ValidationError
 from apps.users.managers import CustomUserManager
 
 
+__all__ = (
+    'User',
+)
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=60, unique=True, verbose_name='Name')
     unique_url_name = models.CharField(null=True, blank=True, max_length=60,
@@ -32,7 +37,6 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                      'Looking for a job description')
 
     USERNAME_FIELD = 'name'
-    REQUIRED_FIELDS = []
     objects = CustomUserManager()
 
     class Meta:

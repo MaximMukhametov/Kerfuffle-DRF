@@ -1,5 +1,9 @@
 from django.db import models
 
+__all__ = (
+    'Photo',
+)
+
 
 class Photo(models.Model):
     """User photo."""

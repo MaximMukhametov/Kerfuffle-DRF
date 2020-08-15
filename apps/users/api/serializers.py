@@ -9,22 +9,30 @@ from apps.photos.validators import validate_image
 from apps.posts.models.post import Post
 from apps.users.models import User
 
+__all__ = (
+    'UserMetaSerializer',
+    'UserProfileSerializer',
+    'UserTotalSerializer',
+    'UserAuthSerializer',
+)
+
 
 class UserMetaSerializer(serializers.ModelSerializer):
     """
     Base User serializer contains common fields and methods.
     """
     photos = PhotosSerializer(required=False, many=True)
-    name = serializers.CharField(read_only=True)
     id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = User
         fields = ('id', 'name', 'photos')
 
-    @staticmethod
-    def partial_update(instance, validated_data):
-        """Updates user information."""
+    def update(self, instance, validated_data):
+        """Updates user information.
+        This method needs to be overridden because update method does
+        not support writable nested fields by default.
+        """
         is_contacts = False
         if 'contacts' in validated_data.keys():
             is_contacts = True
@@ -75,6 +83,7 @@ class UserMetaSerializer(serializers.ModelSerializer):
 
 class UserAuthSerializer(UserMetaSerializer):
     """Serializer for for auth check"""
+    photos = PhotosSerializer(required=False)
 
     class Meta:
         model = User
@@ -97,11 +106,13 @@ class UserProfileSerializer(UserAuthSerializer):
         model = User
         fields = (
                 UserAuthSerializer.Meta.fields + (
-            'contacts', 'looking_for_a_job',
+            'contacts',
+            'looking_for_a_job',
             'looking_for_a_job_description',
             'full_name',
             'posts',
-            'followed', 'followers')
+            'followed',
+            'followers')
         )
 
 
@@ -116,6 +127,7 @@ class UserTotalSerializer(UserAuthSerializer):
         fields = (
                 UserMetaSerializer.Meta.fields + (
             'unique_url_name',
-            'photos', 'status',
+            'photos',
+            'status',
             'following')
         )

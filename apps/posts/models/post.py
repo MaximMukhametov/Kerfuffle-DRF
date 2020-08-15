@@ -1,5 +1,9 @@
 from django.db import models
 
+__all__ = (
+    'Post',
+)
+
 
 class Post(models.Model):
     """User posts."""

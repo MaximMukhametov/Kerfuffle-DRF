@@ -1,5 +1,9 @@
 from django.db import models
 
+__all__ = (
+    'Contact',
+)
+
 
 class Contact(models.Model):
     """User contact information."""

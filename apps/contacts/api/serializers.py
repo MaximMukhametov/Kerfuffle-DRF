@@ -8,7 +8,7 @@ class ContactsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contact
-        exclude = (
+        fields = (
             'github',
             'vk',
             'facebook',

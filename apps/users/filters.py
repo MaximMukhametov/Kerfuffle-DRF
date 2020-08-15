@@ -1,6 +1,10 @@
 import django_filters
 from django.contrib.auth import get_user_model
 
+__all__ = (
+    'UserFilter',
+)
+
 
 class UserFilter(django_filters.FilterSet):
     followers = django_filters.CharFilter(method='get_qs_by_followers')

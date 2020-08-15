@@ -2,6 +2,10 @@ from django.db import models
 
 from apps.dialogs.managers import CustomMessageManager
 
+__all__ = (
+    'Message',
+)
+
 
 class Message(models.Model):
     """User dialogs."""

@@ -6,4 +6,5 @@ class UsersApiConfig(AppConfig):
     verbose_name = 'Users'
 
     def ready(self):
+        import libs.signals
         super().ready()

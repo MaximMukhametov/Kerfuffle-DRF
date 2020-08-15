@@ -1,0 +1,1 @@
+from .create_contacts_for_user import create_contacts_for_new_user
