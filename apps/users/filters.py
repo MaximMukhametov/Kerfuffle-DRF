@@ -10,19 +10,22 @@ class UserFilter(django_filters.FilterSet):
     followers = django_filters.CharFilter(method='get_qs_by_followers')
     following = django_filters.CharFilter(method='get_qs_by_following')
     like_post = django_filters.NumberFilter(method='get_qs_by_like_post')
-    name = django_filters.CharFilter(method='get_qs_by_name')
 
     class Meta:
         model = get_user_model()
-        fields = ['name', 'followers', 'following', 'like_post']
+        fields = ['name',
+                  'full_name',
+                  'status',
+                  'looking_for_a_job',
+                  'followers',
+                  'following',
+                  'is_staff',
+                  'like_post',
+                  'my_like']
 
     @property
     def qs(self):
         return super().qs.exclude(id=self.request.user.id)
-
-    @staticmethod
-    def get_qs_by_name(queryset, name, value):
-        return queryset.filter(**{name: value, })
 
     def get_qs_by_followers(self, queryset, name, value):
         if value == 'true':
