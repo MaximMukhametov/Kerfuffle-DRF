@@ -1,9 +1,11 @@
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, QuerySet
+
+from apps.users.models import User
 
 
 class CustomMessageManager(models.Manager):
-    def get_users(self, user, serializer_class):
+    def get_users(self, user: User, serializer_class: type) -> list:
         """
         Gives a list of users who have correspondence
         with a particular user with the last message.
@@ -20,7 +22,7 @@ class CustomMessageManager(models.Manager):
                                              'message_data': last_message.data})
         return messages_with_chat_users
 
-    def get_messages(self, user, target_user_id,):
+    def get_messages(self, user: User, target_user_id: int) -> QuerySet:
         """
         Gives a list of dialogs between current user
         and user which selected by id, with the ability to
@@ -30,5 +32,3 @@ class CustomMessageManager(models.Manager):
                    written_by_id=target_user_id) | Q(
             written_by_id=user.id, written_for_id=target_user_id)
         return self.filter(filter).order_by('-created_at')
-
-

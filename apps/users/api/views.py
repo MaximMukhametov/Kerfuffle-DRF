@@ -7,12 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
-from apps.users.api.permissions import CurrentUserIsOwner, \
-    CurrentUserIsOwnerAuth
 from apps.users.api.serializers import UserTotalSerializer, \
     UserProfileSerializer, UserAuthSerializer
 from apps.users.filters import UserFilter
 from apps.users.models import User
+from apps.users.api.permissions import CurrentUserIsOwner, CurrentUserIsOwnerAuth
 
 
 class BaseUserViewSet(GenericViewSet):

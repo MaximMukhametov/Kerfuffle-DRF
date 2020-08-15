@@ -27,16 +27,3 @@ class UserFactory(factory.django.DjangoModelFactory):
         if extracted:
             # add extracted user to followed
             self.followed.add(extracted)
-
-
-    @factory.post_generation
-    def create_messages(self, create, extracted, **kwargs):
-        pass
-#
-# class UserWithAvatarFactory(UserFactory):
-#     """Custom factory for testing user with avatar.
-#
-#     The factory creates really user avatar file.
-#
-#     """
-#     avatar = factory.django.ImageField(color='magenta')

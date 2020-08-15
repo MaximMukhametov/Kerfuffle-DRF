@@ -22,7 +22,7 @@ def user_factory(django_db_blocker):
 
 
 @pytest.fixture(scope='session')
-def user(django_db_blocker):
+def user_with_auth(django_db_blocker):
     with django_db_blocker.unblock():
         return UserFactory()
 
@@ -34,17 +34,13 @@ def message_factory(django_db_blocker):
 
 
 @pytest.fixture(scope='session')
-def user_api_auth_client(django_db_blocker, user):
+def api_auth_client(django_db_blocker, user_with_auth):
     """
     Generate APIClient with authentication
-    --------------------------------------
-    Usage inside pytest:
-        user_with_auth, api_auth_client = user_api_client
     """
-    with django_db_blocker.unblock():
-        api_client = APIClient()
-        api_client.force_authenticate(user=user)
-        return user, api_client
+    api_client = APIClient()
+    api_client.force_authenticate(user=user_with_auth)
+    return api_client
 
 
 @pytest.fixture(scope='session')

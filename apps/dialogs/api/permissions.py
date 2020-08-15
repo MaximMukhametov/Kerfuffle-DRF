@@ -13,7 +13,7 @@ class CurrentUserIsOwner(permissions.IsAuthenticated):
             return True
 
         # Instance must have an attribute named `owner`.
-        return obj.id == request.user.id
+        return obj.written_by.id == request.user.id
 
 
 class CurrentUserIsOwnerAuth(permissions.IsAuthenticated):
@@ -22,4 +22,4 @@ class CurrentUserIsOwnerAuth(permissions.IsAuthenticated):
     """
 
     def has_object_permission(self, request, view, obj):
-        return obj.id == request.user.id
+        return obj.written_by.id == request.user.id

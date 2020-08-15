@@ -43,3 +43,5 @@ pytest==6.0.1
 pytest-django==3.9.0
 factory-boy==3.0.1
 Faker==4.1.1
+
+django-extensions==3.0.5
