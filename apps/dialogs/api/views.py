@@ -18,8 +18,13 @@ class MessageModelViewSet(ModelViewSet):
     def message(self, request, **kwargs):
         """Retrieve all message between particular user"""
         message = Message.objects.get_messages(request.user, kwargs['pk'])
-        serializer = self.serializer_class(message, many=True)
-        return Response({'data': serializer.data})
+        page = self.paginate_queryset(message)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(message, many=True)
+        return Response(serializer.data)
 
     def list(self, request, **kwargs):
         """
