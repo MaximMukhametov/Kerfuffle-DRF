@@ -1,0 +1,54 @@
+# *************************************************
+# Django packages
+# *************************************************
+Django==3.0.7
+
+# filter querysets dynamically
+django-filter
+
+# Control CORS headers from within the app
+django-cors-headers
+
+# Django REST Framework
+djangorestframework
+
+# WSGI application server
+gunicorn
+
+# A helper class for handling configuration defaults
+# of packaged Django apps gracefully.
+django-appconf
+
+# Allows you to utilize the 12factor inspired DATABASE_URL
+# environment variable to configure your Django application.
+dj-database-url
+
+# The Universal Character Encoding Detector
+chardet
+
+# JWT libs
+djoser
+PyJWT
+djangorestframework-simplejwt
+
+# Database abstraction layer
+psycopg2-binary
+
+# Storage to AWS S3
+django-storages
+boto3
+botocore
+
+# One of its main features is a set of processors which expose a simple interface for performing manipulations on PIL images.
+pilkit
+
+# Pillow is the friendly PIL fork by Alex Clark and Contributors. PIL is the Python Imaging Library by Fredrik Lundh and Contributors.
+Pillow
+
+# Timezones and datetime utils
+pytz
+
+requests
+
+# Radically simplified static file serving for Python web apps
+whitenoise
