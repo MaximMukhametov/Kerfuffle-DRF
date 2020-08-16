@@ -14,5 +14,5 @@ router.register('profile', UserProfileView, basename='profile')
 router.register('auth/me', UserAuthView, basename='auth')
 urlpatterns = [
     path('follow/<int:pk>', FollowUnfollowView.as_view(), name='follow'),
-    path('', include(router.urls), name='message'),
+    path('', include(router.urls), name='users_url'),
 ]
