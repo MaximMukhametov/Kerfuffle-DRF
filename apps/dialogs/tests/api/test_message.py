@@ -10,16 +10,17 @@ from apps.users.models import User
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def message_by_auth_user(django_db_setup, django_db_blocker,
                          message_factory: type,
+                         user_factory: type,
                          user_with_auth: User) -> Message:
     """Return message by auth user."""
     with django_db_blocker.unblock():
         return message_factory(written_by=user_with_auth)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def detail_message_view_url(django_db_blocker,
                             message_by_auth_user: Message) -> str:
     """Return detail view url with message id"""
@@ -67,10 +68,10 @@ def test_post_message_view(faker: Faker,
     assert data['written_for']['id'] == recipient_user.id
 
 
-def test_patch_message_view(faker: Faker, message_by_auth_user: Message,
+def test_patch_message_view(faker: Faker, message_by_auth_user,
                             api_auth_client: APIClient,
                             detail_message_view_url: str):
-    """Ensure user can patch his message."""
+    """Make sure user can patch his message."""
     payload = {'message': faker.sentence()}
     response = api_auth_client.patch(detail_message_view_url, payload)
 
@@ -96,7 +97,7 @@ def test_cant_patch_not_owned_message_view(faker: Faker,
 def test_delete_message_view(message_by_auth_user: Message,
                              detail_message_view_url: str,
                              api_auth_client: APIClient):
-    """Ensure user can delete his message."""
+    """Make sure user can delete his message."""
     response = api_auth_client.delete(detail_message_view_url)
 
     assert response.status_code == 204

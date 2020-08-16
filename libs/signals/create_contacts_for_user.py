@@ -10,3 +10,4 @@ def create_contacts_for_new_user(sender, created, instance, **kwargs):
     if created:
         instance.contacts = Contact.objects.create()
         instance.save()
+    pass

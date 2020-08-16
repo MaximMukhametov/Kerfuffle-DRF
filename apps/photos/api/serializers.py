@@ -8,11 +8,12 @@ from apps.photos.validators import validate_image
 class PhotosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
-        fields = ('__all__')
+        fields = ('id', 'small_img', 'large_img')
 
 
 class PhotosUploadSerializer(serializers.ModelSerializer):
     """Serializer for Photo model."""
+
     class Meta:
         model = Photo
         fields = ('large_img',)

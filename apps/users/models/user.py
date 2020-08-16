@@ -5,7 +5,6 @@ from rest_framework.exceptions import ValidationError
 
 from apps.users.managers import CustomUserManager
 
-
 __all__ = (
     'User',
 )

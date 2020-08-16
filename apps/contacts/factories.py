@@ -1,12 +1,11 @@
 import factory
 
 
-
 class ContactFactory(factory.django.DjangoModelFactory):
     """
     Factory for generates test Contact model.
-
     """
+
     class Meta:
         model = 'contacts.Contact'
 

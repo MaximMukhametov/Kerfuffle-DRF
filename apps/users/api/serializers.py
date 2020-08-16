@@ -87,9 +87,7 @@ class UserAuthSerializer(UserMetaSerializer):
 
     class Meta:
         model = User
-        fields = (
-                UserMetaSerializer.Meta.fields + ('background_photo',)
-        )
+        fields = UserMetaSerializer.Meta.fields + ('background_photo',)
 
 
 class UserProfileSerializer(UserAuthSerializer):
@@ -104,8 +102,7 @@ class UserProfileSerializer(UserAuthSerializer):
 
     class Meta:
         model = User
-        fields = (
-                UserAuthSerializer.Meta.fields + (
+        fields = UserAuthSerializer.Meta.fields + (
             'contacts',
             'looking_for_a_job',
             'looking_for_a_job_description',
@@ -113,7 +110,6 @@ class UserProfileSerializer(UserAuthSerializer):
             'posts',
             'followed',
             'followers')
-        )
 
 
 class UserTotalSerializer(UserAuthSerializer):
@@ -124,10 +120,8 @@ class UserTotalSerializer(UserAuthSerializer):
 
     class Meta:
         model = User
-        fields = (
-                UserMetaSerializer.Meta.fields + (
+        fields = UserMetaSerializer.Meta.fields + (
             'unique_url_name',
             'photos',
             'status',
             'following')
-        )
