@@ -10,17 +10,20 @@ from apps.users.models import User
 pytestmark = pytest.mark.django_db
 
 
-@pytest.fixture()
+@pytest.fixture(scope='module')
 def message_by_auth_user(django_db_setup, django_db_blocker,
                          message_factory: type,
                          user_factory: type,
                          user_with_auth: User) -> Message:
     """Return message by auth user."""
     with django_db_blocker.unblock():
-        return message_factory(written_by=user_with_auth)
+        message = message_factory(written_by=user_with_auth,
+                                  written_for=None)
+        yield message
+        message.delete()
 
 
-@pytest.fixture()
+@pytest.fixture(scope='module')
 def detail_message_view_url(django_db_blocker,
                             message_by_auth_user: Message) -> str:
     """Return detail view url with message id"""
