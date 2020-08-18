@@ -5,6 +5,7 @@ from django.db import migrations
 
 
 def forward_func(apps, schema_editor):
+    """Generate users data set, from json file"""
     User = apps.get_model("users", "User")
     script_dir = os.path.dirname(__file__)
     with open(script_dir + "/initial_users_data/new_db.json",'r') as initial_data:
