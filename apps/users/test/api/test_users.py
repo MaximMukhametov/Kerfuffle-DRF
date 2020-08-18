@@ -63,3 +63,4 @@ def test_users_view_with_follow_filter(bool_value: str,
 
     assert response.status_code == 200
     assert response.data['count'] == test_count_of_users + user_count_change
+

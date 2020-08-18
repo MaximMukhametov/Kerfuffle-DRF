@@ -1,15 +1,11 @@
 import factory
 
-from apps.contacts.factories import ContactFactory
-
 
 class UserFactory(factory.django.DjangoModelFactory):
     """
     Factory for generates test User model.
     There are required field 'name'.
     """
-    contacts = factory.RelatedFactory(ContactFactory,
-                                      factory_related_name='user')
     name = factory.Faker('name')
     full_name = factory.Faker('name')
     status = factory.Faker('sentence')

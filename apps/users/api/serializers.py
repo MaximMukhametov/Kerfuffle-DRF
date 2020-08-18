@@ -21,7 +21,7 @@ class UserMetaSerializer(serializers.ModelSerializer):
     """
     Base User serializer contains common fields and methods.
     """
-    photos = PhotosSerializer(required=False, many=True)
+    photos = PhotosSerializer(required=False)
     id = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -83,8 +83,6 @@ class UserMetaSerializer(serializers.ModelSerializer):
 
 class UserAuthSerializer(UserMetaSerializer):
     """Serializer for for auth check"""
-    photos = PhotosSerializer(required=False)
-
     class Meta:
         model = User
         fields = UserMetaSerializer.Meta.fields + ('background_photo',)
