@@ -9,7 +9,7 @@ pytestmark = pytest.mark.django_db
 
 def user_list_url_with_filter(filter_pattern: str) -> str:
     """Generate url with query params"""
-    return reverse('users-list') + f'?{filter_pattern}'
+    return ''.join([reverse('users-list'), f'?{filter_pattern}'])
 
 
 def test_get_users_view(api_client: APIClient):
@@ -46,7 +46,7 @@ def test_users_view_with_follow_filter(bool_value: str,
     some_user = user_factory()
     crowd_amount = 3
     user_factory.create_batch(size=crowd_amount)
-    url = user_list_url_with_filter(filter_pattern + '=' + bool_value)
+    url = user_list_url_with_filter(''.join((filter_pattern, '=', bool_value)))
     response = api_auth_client.get(url)
 
     if bool_value == 'true':
