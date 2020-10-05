@@ -7,7 +7,7 @@ from apps.users.models import User
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _setup_django_db(django_db_setup):
+def django_db_prepare(django_db_setup):
     """
     Setup db for all tests.
     It will make sure that the original pytest-django fixture
