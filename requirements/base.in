@@ -1,7 +1,7 @@
 # *************************************************
 # Django packages
 # *************************************************
-Django==3.0.7
+Django==3.0.14
 
 # filter querysets dynamically
 django-filter
